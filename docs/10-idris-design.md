@@ -19,7 +19,7 @@ With a single large AST and an `isValid : Bool` field, every formatter would nee
 bad : MatchPlan 1
 ```
 
-There is no need to run this negative example in a test runner: the compiler rejects it first. [`TypeLevel`](../tests/TypeLevel.idr) contains positive witnesses.
+There is no need to run this negative example in a test runner: the compiler rejects it first. [`MF2.IR.Test`](../src/MF2/IR/Test.idr) contains positive witnesses beside the IR.
 
 ## Propositions and erased proofs
 
@@ -50,4 +50,4 @@ The locale, function registry, and presence of external inputs belong to the run
 - [`IR`](../src/MF2/IR.idr)
 - [`Validate`](../src/MF2/Validate.idr)
 - [`Decimal`](../src/MF2/Decimal.idr)
-- [`TypeLevel`](../tests/TypeLevel.idr)
+- [`MF2.IR.Test`](../src/MF2/IR/Test.idr)

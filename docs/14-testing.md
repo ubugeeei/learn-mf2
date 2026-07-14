@@ -8,7 +8,7 @@
 
 ## Compile-time tests
 
-[`TypeLevel`](../tests/TypeLevel.idr) constructs a two-selector plan, a two-key variant, and an all-catch-all proof. Changing a `Vect` length makes type checking fail before the test executable starts.
+[`MF2.IR.Test`](../src/MF2/IR/Test.idr) constructs a two-selector plan, a two-key variant, and an all-catch-all proof. Changing a `Vect` length makes type checking fail before the test executable starts.
 
 ## Official snapshot
 
@@ -23,7 +23,18 @@ Fixtures are pinned to the `LDML48.2` tag and commit `7f142fb4f1f5ea6ab1eb34ce2b
 | `pattern-selection.json` | 22 |
 | `u-options.json` | 10 |
 
-See [`NOTICE`](../tests/NOTICE.md) for fixture provenance and licensing.
+See [`NOTICE`](../src/MF2/Fixtures/NOTICE.md) for fixture provenance and licensing.
+
+## Colocation
+
+There is no separate `tests/` source tree. Tests live beside the phase they exercise:
+
+- [`Decimal.Test`](../src/MF2/Decimal/Test.idr) covers grammar, normalization, exact arithmetic, and generated round trips.
+- [`Parser.Test`](../src/MF2/Parser/Test.idr) consumes the syntax fixtures under `Parser/Fixtures/`.
+- [`Validate.Test`](../src/MF2/Validate/Test.idr) consumes data-model fixtures and refinement regressions.
+- Runtime unit and integration tests sit under [`Runtime/`](../src/MF2/Runtime.idr), next to Environment, Handlers, Selection, Format, and official fixtures.
+
+[`MF2.TestMain`](../src/MF2/TestMain.idr) only aggregates these phase-local results.
 
 ## Generated decimal tests
 
@@ -31,7 +42,7 @@ The suite generates a broad range of positive and negative integers and checks t
 
 ## Regression table
 
-Table-driven tests cover markup, fallback, every default function, English and Japanese plural behavior, ordinals, multiple selectors, and indirect annotations.
+Table-driven tests cover markup, fallback, every default function and its error paths, environment replacement, option coercion, English/French/Japanese plural behavior, ordinal exceptions, match ranks, multiple selectors, bidi metadata, and indirect annotations.
 
 ## Running the suite
 

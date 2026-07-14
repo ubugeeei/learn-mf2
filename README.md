@@ -52,11 +52,11 @@ Every standard, specification, and official fixture referenced by the project is
 - [`MF2.Validate`](src/MF2/Validate.idr): data-model error accumulation and type refinement
 - [`MF2.IR`](src/MF2/IR.idr): IR built around `Vect (S n)`, `AllCatchall`, and erased proofs
 - [`MF2.Decimal`](src/MF2/Decimal.idr): arbitrary-precision decimal arithmetic
-- [`MF2.Runtime`](src/MF2/Runtime.idr): public runtime façade over [runtime types](src/MF2/Runtime/Types.idr), [default handlers](src/MF2/Runtime/Handlers.idr), [resolution and selection](src/MF2/Runtime/Resolution.idr), and [structured formatting](src/MF2/Runtime/Format.idr)
+- [`MF2.Runtime`](src/MF2/Runtime.idr): public runtime façade with a documented reading order through [types](src/MF2/Runtime/Types.idr), [environment and fallback](src/MF2/Runtime/Environment.idr), [handler dispatch](src/MF2/Runtime/Handlers.idr), [selection](src/MF2/Runtime/Selection.idr), [resolution](src/MF2/Runtime/Resolution.idr), and [formatting](src/MF2/Runtime/Format.idr)
 - [`MF2.Compiler`](src/MF2/Compiler.idr): the public compile and format API
 - [`Main`](src/Main.idr): the CLI
-- [`TestMain`](tests/TestMain.idr): property tables and the official fixture runner
-- [`TypeLevel`](tests/TypeLevel.idr): examples where successful compilation is itself the test
+- [`MF2.TestMain`](src/MF2/TestMain.idr): the aggregate runner for tests colocated with their implementation modules
+- [`MF2.IR.Test`](src/MF2/IR/Test.idr): examples where successful compilation is itself the test
 
 ## Important scope boundary
 
@@ -64,4 +64,4 @@ The compiler front end—syntax, data-model validation, and typed matcher IR—i
 
 ## License
 
-The project itself is licensed under the MIT License. Data derived from official Unicode fixtures is covered by [`tests/LICENSE.unicode`](tests/LICENSE.unicode), with provenance pinned in [`tests/NOTICE.md`](tests/NOTICE.md).
+The project itself is licensed under the MIT License. Data derived from official Unicode fixtures is covered by [`src/MF2/Fixtures/LICENSE.unicode`](src/MF2/Fixtures/LICENSE.unicode), with provenance pinned in [`src/MF2/Fixtures/NOTICE.md`](src/MF2/Fixtures/NOTICE.md).

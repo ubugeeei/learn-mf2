@@ -1,4 +1,4 @@
-module OfficialRuntimeFixtures
+module MF2.Runtime.Fixtures
 
 import MF2.Decimal
 import MF2.Runtime
@@ -62,4 +62,3 @@ officialRuntime = [
   MkOfficialRuntime "u: Options" "أهلاً {world :string u:dir=ltr}" [] "ar" RTL True "أهلاً ⁦world⁩",
   MkOfficialRuntime "u: Options" "أهلاً {بالعالم :string}" [] "ar" RTL True "أهلاً ⁨بالعالم⁩"
   ]
-

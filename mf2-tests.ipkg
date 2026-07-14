@@ -1,20 +1,24 @@
 package mf2-tests
 
 version = 0.1.0
-sourcedir = "tests"
-modules = Fixtures.Types,
-          Fixtures.Syntax,
-          Fixtures.Errors,
-          OfficialFixtures,
-          OfficialRuntimeFixtures,
-          TypeLevel,
-          Support.Results,
-          Support.FrontendCases,
-          Support.DecimalCases,
-          Support.RuntimeCases,
-          Support.OfficialRuntimeCases,
-          Support.SemanticCases,
-          TestMain
-main = TestMain
+sourcedir = "src"
+modules = MF2.Testing,
+          MF2.Parser.Fixtures.Types,
+          MF2.Parser.Fixtures.Valid,
+          MF2.Parser.Fixtures.Invalid,
+          MF2.Parser.Fixtures,
+          MF2.Validate.Fixtures,
+          MF2.Runtime.Fixtures,
+          MF2.IR.Test,
+          MF2.Decimal.Test,
+          MF2.Parser.Test,
+          MF2.Validate.Test,
+          MF2.Runtime.Environment.Test,
+          MF2.Runtime.Handlers.Test,
+          MF2.Runtime.Selection.Test,
+          MF2.Runtime.Format.Test,
+          MF2.Runtime.Fixtures.Test,
+          MF2.TestMain
+main = MF2.TestMain
 executable = mf2-tests
 opts = "--total"

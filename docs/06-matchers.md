@@ -34,8 +34,8 @@ Because the index is `S tail`, zero selectors are unrepresentable. The fallback 
 
 - [`parseVariants`](../src/MF2/Parser/Message.idr)
 - [`compileMatch`](../src/MF2/Validate.idr)
-- [`selectBest`](../src/MF2/Runtime/Resolution.idr)
-- [`TypeLevel`](../tests/TypeLevel.idr)
+- [`selectBest`](../src/MF2/Runtime/Selection.idr)
+- [`MF2.IR.Test`](../src/MF2/IR/Test.idr)
 
 ## Specifications
 

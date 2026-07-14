@@ -1,12 +1,12 @@
-module Support.OfficialRuntimeCases
+module MF2.Runtime.Fixtures.Test
 
 import MF2.Compiler
 import MF2.Decimal
 import MF2.Diagnostic
 import MF2.Runtime
 import MF2.Syntax
-import OfficialRuntimeFixtures
-import Support.Results
+import MF2.Runtime.Fixtures
+import MF2.Testing
 
 %default total
 
@@ -66,6 +66,7 @@ testRegistry =
   , (MkIdentifier (Just "test") "format", MkFunctionHandler (testFunction False True))
   ]
 
+||| Run the pinned fallback, pattern-selection, and Unicode namespace fixtures.
 public export
 runOfficialRuntime : List OfficialRuntime -> Results
 runOfficialRuntime [] = empty

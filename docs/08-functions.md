@@ -48,6 +48,9 @@ A custom handler can return the information required for formatting, selection, 
 
 - [`Decimal`](../src/MF2/Decimal.idr)
 - [`runDefault`](../src/MF2/Runtime/Handlers.idr)
+- [text and temporal handlers](../src/MF2/Runtime/Handlers/Text.idr)
+- [numeric handlers](../src/MF2/Runtime/Handlers/Numeric.idr)
+- [currency and unit handlers](../src/MF2/Runtime/Handlers/Measure.idr)
 - [`FunctionHandler`](../src/MF2/Runtime/Types.idr)
 
 ## Specifications

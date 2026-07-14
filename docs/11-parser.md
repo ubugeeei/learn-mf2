@@ -32,7 +32,7 @@ MF2 uses `s` for required whitespace and `o` for optional whitespace. Bidi marks
 
 ## Official syntax fixtures
 
-[`OfficialFixtures`](../tests/OfficialFixtures.idr) runs all 114 valid syntax cases and all 133 syntax-error cases from Version 48.2. After changing the parser, run the complete fixture set rather than only local examples.
+[`MF2.Parser.Test`](../src/MF2/Parser/Test.idr) runs all 114 valid syntax cases and all 133 syntax-error cases from the colocated [Version 48.2 fixtures](../src/MF2/Parser/Fixtures.idr). After changing the parser, run the complete fixture set rather than only local examples.
 
 ## Specifications
 

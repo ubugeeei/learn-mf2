@@ -9,7 +9,7 @@ Icon: {#icon name=warning /}
 
 MF2 represents open, close, and standalone markup, but does not require nesting or matching tag names. The application assigns meaning to it. For a string target, markup's default representation is the empty string.
 
-[`OutputPart`](../src/MF2/Runtime/Format.idr) returns markup as structured data. A safe integration maps it to an allowlisted component table instead of concatenating it into HTML source.
+[`OutputPart`](../src/MF2/Runtime/Types.idr) returns markup as structured data. A safe integration maps it to an allowlisted component table instead of concatenating it into HTML source.
 
 ## `u:id`
 
@@ -28,9 +28,9 @@ These control characters are difficult to see, but prevent spillover when RTL an
 ## Corresponding implementation
 
 - [`Markup`](../src/MF2/Syntax.idr)
-- [`MarkupOutput`](../src/MF2/Runtime/Format.idr)
+- [`MarkupOutput`](../src/MF2/Runtime/Types.idr)
 - [`isolateText`](../src/MF2/Runtime/Format.idr)
-- [Official u-options fixtures](../tests/OfficialRuntimeFixtures.idr)
+- [Official u-options fixtures](../src/MF2/Runtime/Fixtures.idr)
 
 ## Specifications
 

@@ -31,7 +31,7 @@ A valid message must produce a formatted result even when runtime errors occur.
 - [`ErrorKind`](../src/MF2/Diagnostic.idr)
 - [`CompileError`](../src/MF2/Compiler.idr)
 - [`validate`](../src/MF2/Validate.idr)
-- [`fallbackSource`](../src/MF2/Runtime/Types.idr)
+- [`fallbackSource`](../src/MF2/Runtime/Environment.idr)
 
 ## Specifications
 

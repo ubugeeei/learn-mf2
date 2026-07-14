@@ -14,7 +14,9 @@ flowchart TD
   validate["MF2.Validate"]
   decimal["MF2.Decimal"]
   runtimeTypes["MF2.Runtime.Types"]
+  runtimeEnvironment["MF2.Runtime.Environment"]
   runtimeHandlers["MF2.Runtime.Handlers"]
+  runtimeSelection["MF2.Runtime.Selection"]
   runtimeResolution["MF2.Runtime.Resolution"]
   runtimeFormat["MF2.Runtime.Format"]
   runtime["MF2.Runtime facade"]
@@ -31,8 +33,11 @@ flowchart TD
   validate --> syntax
   runtimeTypes --> decimal
   runtimeTypes --> syntax
-  runtimeHandlers --> runtimeTypes
+  runtimeEnvironment --> runtimeTypes
+  runtimeHandlers --> runtimeEnvironment
+  runtimeSelection --> runtimeTypes
   runtimeResolution --> runtimeHandlers
+  runtimeResolution --> runtimeSelection
   runtimeResolution --> ir
   runtimeFormat --> runtimeResolution
   runtime --> runtimeFormat

@@ -1,6 +1,6 @@
-module Fixtures.Syntax
+module MF2.Parser.Fixtures.Valid
 
-import Fixtures.Types
+import MF2.Parser.Fixtures.Types
 
 %default total
 

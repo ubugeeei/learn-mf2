@@ -31,7 +31,7 @@ An option is written `name=value`, where the value is a literal or variable. Opt
 
 Attributes are preserved for tooling and output metadata; they are not options passed to a function handler: `{$name @source=profile @important}`.
 
-[`Expression`](../src/MF2/Syntax.idr) separates `operand : Maybe Operand` from `function : Maybe FunctionRef`, while [`OutputPart`](../src/MF2/Runtime/Format.idr) retains attributes in structured output.
+[`Expression`](../src/MF2/Syntax.idr) separates `operand : Maybe Operand` from `function : Maybe FunctionRef`, while [`OutputPart`](../src/MF2/Runtime/Types.idr) retains attributes in structured output.
 
 ## Corresponding implementation
 
