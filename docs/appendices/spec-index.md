@@ -1,6 +1,6 @@
-# 仕様・規格・公式資料リンク総覧
+# Complete index of specifications, standards, and official resources
 
-このリポジトリの本文・実装・test が参照する仕様リンクをここへ集約します。versioned link を優先し、draft は別枠にしています。
+This page collects every specification link referenced by the handbook, implementation, and tests. Versioned links are preferred; draft material is kept in a separate section.
 
 ## Normative baseline: LDML 48.2
 
@@ -28,12 +28,12 @@
 - [Formatting source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/formatting.md)
 - [Errors source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/errors.md)
 - [`:string` source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/string.md)
-- [numeric functions source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/number.md)
-- [date/time functions source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/datetime.md)
-- [Unicode namespace source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/u-namespace.md)
-- [data model source](https://github.com/unicode-org/message-format-wg/tree/LDML48.2/spec/data-model)
+- [Numeric-functions source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/number.md)
+- [Date/time-functions source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/datetime.md)
+- [Unicode-namespace source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/u-namespace.md)
+- [Data-model source](https://github.com/unicode-org/message-format-wg/tree/LDML48.2/spec/data-model)
 - [`message.json` schema](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/data-model/message.json)
-- [appendices source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/appendices.md)
+- [Appendices source](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/appendices.md)
 
 ## Unicode and CLDR dependencies
 
@@ -58,8 +58,8 @@
 ## Official tests and learning references
 
 - [Unicode MF2 test suite at LDML48.2](https://github.com/unicode-org/message-format-wg/tree/LDML48.2/test)
-- [test suite README](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/test/README.md)
-- [test schema](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/test/schemas/v0/tests.schema.json)
+- [Test suite README](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/test/README.md)
+- [Test schema](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/test/schemas/v0/tests.schema.json)
 - [Unicode License](https://www.unicode.org/license.txt)
 - [MF2 project home](https://messageformat.unicode.org/)
 - [MF2 Quick Start](https://messageformat.unicode.org/docs/quick-start/)
@@ -71,11 +71,10 @@
 - [MF2 pattern guide](https://messageformat.unicode.org/docs/reference/patterns/)
 - [MF2 error guide](https://messageformat.unicode.org/docs/reference/errors/)
 
-## Draft / future baseline
+## Draft and future baseline
 
 - [Proposed CLDR 49 Part 9](https://www.unicode.org/reports/tr35/tr35-79/tr35-messageFormat.html)
 - [CLDR 49 modifications](https://www.unicode.org/reports/tr35/tr35-79/tr35-modifications.html#messageformat)
 - [Working Group main branch](https://github.com/unicode-org/message-format-wg)
 
-draft の内容は [17-draft-49](../17-draft-49.md) 以外で normative baseline として扱いません。
-
+Draft content is not treated as a normative baseline outside [Chapter 17](../17-draft-49.md).

@@ -1,13 +1,13 @@
-# なぜ MessageFormat 2 が必要か
+# Why MessageFormat 2 exists
 
-文字列補間は「値を文字列にする」問題しか解きません。localization が必要とするのは、値の型、locale、文法、語順、方向、rich text、失敗時の振る舞いを、翻訳可能な message data model として扱うことです。
+String interpolation solves only the problem of turning a value into text. Localization also needs to represent value types, locales, grammar, word order, text direction, rich text, and failure behavior in a translatable message data model.
 
-英語の `1 item` / `2 items` を三項演算子で作ると、ロシア語やアラビア語の plural category、翻訳時の語順変更、数値表記を application code に埋め込んでしまいます。MF2 は次を分離します。
+If English `1 item` / `2 items` is implemented with a conditional expression, plural categories for languages such as Russian and Arabic, translatable word order, and localized number formatting leak into application code. MF2 separates these responsibilities:
 
-- message author は pattern と variant を記述する。
-- function handler は値を locale-aware に format/select できる resolved value にする。
-- matcher は selector と variant key を比較する。
-- formatter は選ばれた pattern を structured parts または string にする。
+- The message author writes patterns and variants.
+- Function handlers turn values into locale-aware resolved values that support formatting and selection.
+- A matcher compares selectors with variant keys.
+- A formatter turns the selected pattern into structured parts or a string.
 
 ```mf2
 .input {$count :number}
@@ -17,15 +17,15 @@ one  {{One item}}
 *    {{{$count} items}}
 ```
 
-ここで `0` は exact key、`one` は locale rule key、`*` は catch-all です。`one` の意味を message 自身へハードコードしない点が重要です。
+Here, `0` is an exact key, `one` is a locale-rule key, and `*` is the catch-all. Crucially, the message does not hard-code what `one` means.
 
-## MF1 との関係
+## Relationship to MF1
 
-MF2 は ICU MessageFormat の後継ですが、MF1 syntax との backward compatibility は non-goal です。expression、declaration、function registry、markup、interchange data model を独立した概念として設計し直しています。
+MF2 is the successor to ICU MessageFormat, but backward compatibility with MF1 syntax is a non-goal. Expressions, declarations, function registries, markup, and the interchange data model have been redesigned as distinct concepts.
 
-## コンパイラとして見る
+## Think of it as a compiler
 
-MF2 processor は一段の template substitution ではありません。
+An MF2 processor is not a single template-substitution step.
 
 ```mermaid
 flowchart LR
@@ -39,9 +39,9 @@ flowchart LR
   parts --> string["bidi-safe string"]
 ```
 
-この分割を [`MF2.Compiler`](../src/MF2/Compiler.idr)、[`MF2.Validate`](../src/MF2/Validate.idr)、[`MF2.Runtime`](../src/MF2/Runtime.idr) でそのままコードにしています。
+This separation appears directly in [`MF2.Compiler`](../src/MF2/Compiler.idr), [`MF2.Validate`](../src/MF2/Validate.idr), and [`MF2.Runtime`](../src/MF2/Runtime.idr).
 
-## 仕様
+## Specifications
 
 - [Introduction](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#introduction)
 - [Syntax design goals](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#design-goals)

@@ -1,41 +1,40 @@
-# Error taxonomy と fallback
+# Error taxonomy and fallback
 
-MF2 の error は発見フェーズが違います。
+MF2 errors are distinguished by the phase in which they are discovered.
 
-| class | 例 | この実装の型 |
+| Class | Example | Type in this implementation |
 |---|---|---|
-| Syntax Error | brace 不足、不正 escape | `ParseFailure Diagnostic` |
-| Data Model Error | key arity、fallback、重複 | `ValidationFailure (List Diagnostic)` |
-| Resolution Error | unresolved variable、unknown function | `FormatResult.errors` |
-| Message Function Error | bad operand/option/key | `FormatResult.errors` |
+| Syntax Error | Missing brace, invalid escape | `ParseFailure Diagnostic` |
+| Data Model Error | Key arity, fallback, duplicate | `ValidationFailure (List Diagnostic)` |
+| Resolution Error | Unresolved variable, unknown function | `FormatResult.errors` |
+| Message Function Error | Invalid operand, option, or key | `FormatResult.errors` |
 
-## syntax と data model を分ける
+## Separate syntax from the data model
 
-`.input {$x} .match $x one {{one}} * {{other}}` は grammar には合います。しかし selector annotation がなく invalid です。parser がこれを拒否すると tooling は「syntax が壊れた」のか「意味制約に違反した」のかを区別できません。
+`.input {$x} .match $x one {{one}} * {{other}}` conforms to the grammar, but it is invalid because its selector lacks an annotation. If the parser rejected it, tooling could not distinguish broken syntax from a semantic constraint violation.
 
-## error accumulation
+## Error accumulation
 
-parser は最初の構文エラーで停止します。validator は独立した data-model error を可能な限り蓄積します。runtime も fallback output と diagnostics を同時に返します。
+The parser stops at the first syntax error. The validator accumulates as many independent data-model errors as possible. At runtime, fallback output and diagnostics are returned together.
 
-## fallback representation
+## Fallback representations
 
-- unresolved `$name` は `{$name}`
-- literal operand の function failure は `{|literal|}`
-- operand なし function は `{:namespace:name}`
-- fallback を local variable で参照し直すと、その variable 名の `{$local}` になる
+- An unresolved `$name` becomes `{$name}`.
+- A function failure with a literal operand becomes `{|literal|}`.
+- A function without an operand becomes `{:namespace:name}`.
+- If a fallback is referenced again through a local variable, it becomes `{$local}` using that variable's name.
 
-valid message は runtime error があっても formatted result を得られなければなりません。
+A valid message must produce a formatted result even when runtime errors occur.
 
-## 対応実装
+## Corresponding implementation
 
 - [`ErrorKind`](../src/MF2/Diagnostic.idr)
 - [`CompileError`](../src/MF2/Compiler.idr)
 - [`validate`](../src/MF2/Validate.idr)
-- [`fallbackSource`](../src/MF2/Runtime.idr)
+- [`fallbackSource`](../src/MF2/Runtime/Types.idr)
 
-## 仕様
+## Specifications
 
 - [Errors](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#errors)
 - [Fallback resolution](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#fallback-resolution)
 - [Formatting fallback values](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#formatting-fallback-values)
-

@@ -1,42 +1,41 @@
-# Runtime、resolution、extension
+# Runtime, resolution, and extensions
 
 ## Context
 
-[`Context`](../src/MF2/Runtime.idr) は locale、message direction、input mapping、custom function registry、bidi policy を持ちます。compile 可能性と runtime context の充足を分離します。
+[`Context`](../src/MF2/Runtime/Types.idr) contains the locale, message direction, input mapping, custom function registry, and bidi policy. Whether a message compiles is deliberately separate from whether its runtime context is complete.
 
-## resolution pipeline
+## Resolution pipeline
 
-1. input values を `ResolvedValue` に包む。
-2. declaration を source order で一度解決。
-3. matcher selector の selection capability を確認。
-4. variant を source order で比較。
-5. 選ばれた pattern だけを解決。
-6. structured parts を生成。
-7. string target なら markup を空にし bidi strategy を適用。
+1. Wrap input values as `ResolvedValue` instances.
+2. Resolve each declaration once in source order.
+3. Check each matcher selector's selection capability.
+4. Compare variants in source order.
+5. Resolve only the selected pattern.
+6. Produce structured parts.
+7. For a string target, replace markup with empty text and apply the bidi strategy.
 
-`ResolvedValue` は raw value だけでなく、formatted representation、selection behavior、direction、isolation、fallback flag を持ちます。function handler の返り値を単なる `String` にしないのがポイントです。
+`ResolvedValue` contains more than a raw value: it also carries its formatted representation, selection behavior, direction, isolation policy, and fallback state. A function handler must therefore return more than a `String`.
 
-## custom registry
+## Custom registry
 
-`Registry` は `(Identifier, FunctionHandler)` の list です。default function にない名前は registry を探し、なければ unknown-function と fallback になります。
+`Registry` is a list of `(Identifier, FunctionHandler)` pairs. A name not provided by a default function is looked up in the registry. If absent there too, resolution returns an unknown-function diagnostic and a fallback.
 
-handler へ `Maybe ResolvedValue` を渡すため、annotation を重ねるときに operand の resolved selection や option-derived representation を引き継げます。公式 pattern-selection fixture の `decimalPlaces` inheritance もこの境界でテストしています。
+Handlers receive `Maybe ResolvedValue`, allowing a new annotation to inherit resolved selection behavior or option-derived representation from its operand. The official pattern-selection fixtures test `decimalPlaces` inheritance through this boundary.
 
-## structured output
+## Structured output
 
-`formatToParts` は `TextOutput`、`ExpressionOutput`、`MarkupOutput` を返します。`formatToString` はその上に作った convenience layer です。DOM、AttributedString、terminal styling を作る場合は parts を使います。
+`formatToParts` returns `TextOutput`, `ExpressionOutput`, and `MarkupOutput`. `formatToString` is a convenience layer built on top. Use the parts API when producing a DOM, `AttributedString`, or terminal styling.
 
-## 対応実装
+## Corresponding implementation
 
-- [`ResolvedValue`](../src/MF2/Runtime.idr)
-- [`resolveExpression`](../src/MF2/Runtime.idr)
-- [`selectPattern`](../src/MF2/Runtime.idr)
-- [`formatToParts`](../src/MF2/Runtime.idr)
-- [`formatToString`](../src/MF2/Runtime.idr)
+- [`ResolvedValue`](../src/MF2/Runtime/Types.idr)
+- [`resolveExpression`](../src/MF2/Runtime/Resolution.idr)
+- [`selectPattern`](../src/MF2/Runtime/Resolution.idr)
+- [`formatToParts`](../src/MF2/Runtime/Format.idr)
+- [`formatToString`](../src/MF2/Runtime/Format.idr)
 
-## 仕様
+## Specifications
 
 - [Formatting](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#formatting)
 - [Option resolution](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#option-resolution)
 - [Function handler](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#function-handler)
-

@@ -1,4 +1,4 @@
-.PHONY: build typecheck test docs links check clean
+.PHONY: build typecheck test docs links sizes check clean
 
 build:
 	idris2 --build mf2.ipkg
@@ -16,7 +16,10 @@ docs:
 links:
 	bash scripts/check-doc-links.sh
 
-check: typecheck test docs links
+sizes:
+	bash scripts/check-file-sizes.sh
+
+check: typecheck test docs links sizes
 
 clean:
 	idris2 --clean mf2.ipkg

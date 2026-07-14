@@ -1,29 +1,29 @@
-# Idris のポテンシャルを使い切る設計
+# Using the full potential of Idris
 
-## phase を型で分ける
+## Separate phases with types
 
-untrusted source は [`parse`](../src/MF2/Parser.idr) で `RawMessage` になります。この時点で grammar は満たしますが、data-model constraint は未検証です。次の [`validate`](../src/MF2/Validate.idr) だけが `CompiledMessage` を生成します。
+Untrusted source becomes `RawMessage` through [`parse`](../src/MF2/Parser/Message.idr). At that point it satisfies the grammar, but its data-model constraints have not been validated. Only [`validate`](../src/MF2/Validate.idr) can produce a `CompiledMessage`.
 
 ```text
 String --parse--> RawMessage --validate--> CompiledMessage
 ```
 
-一つの巨大な AST に `isValid : Bool` を付ける設計では、formatter が毎回その bool を信頼する必要があります。型を分ければ、formatter の引数に raw state が到達しません。
+With a single large AST and an `isValid : Bool` field, every formatter would need to trust that boolean. Separate types make it impossible for a raw state to reach a formatter argument.
 
-## arity を index にする
+## Put arity in an index
 
-`Variant n` は `Vect n Key` を持ちます。`MatchPlan tail` の selector は `Vect (S tail) Selector` です。したがって次は compile しません。
+`Variant n` contains `Vect n Key`. The selectors in `MatchPlan tail` have type `Vect (S tail) Selector`. Consequently, an attempt such as the following cannot compile:
 
 ```idris
--- 2 selectors に 1 key の variant を渡すため type mismatch
+-- Type mismatch: a one-key variant cannot be passed to two selectors.
 bad : MatchPlan 1
 ```
 
-この negative example を test で実行する必要はありません。コンパイラが test runner より前に拒否します。positive witness は [`TypeLevel`](../tests/TypeLevel.idr) にあります。
+There is no need to run this negative example in a test runner: the compiler rejects it first. [`TypeLevel`](../tests/TypeLevel.idr) contains positive witnesses.
 
-## proposition と erased proof
+## Propositions and erased proofs
 
-fallback の key が全部 `Catchall` であることを proposition にします。
+The property that every fallback key is `Catchall` is represented as a proposition.
 
 ```idris
 data AllCatchall : Vect arity Key -> Type where
@@ -31,24 +31,23 @@ data AllCatchall : Vect arity Key -> Type where
   NextCatchall : AllCatchall rest -> AllCatchall (Catchall :: rest)
 ```
 
-`FallbackVariant` の proof field は `0` multiplicity なので runtime representation から消えます。保証は強く、実行時コストはゼロです。
+The proof field in `FallbackVariant` has multiplicity `0`, so it is erased from the runtime representation. The guarantee is strong and its runtime cost is zero.
 
-## totality
+## Totality
 
-package は `--total` で build します。parser は mutually recursive grammar を fuel で構造的再帰に変換し、decimal normalization は scale に対して再帰します。partial function や unchecked index access は formatter path にありません。
+The package is built with `--total`. The parser converts its mutually recursive grammar into structural recursion using fuel, and decimal normalization recurses over the scale. No partial function or unchecked index access appears on the formatting path.
 
-## dependent pair を隠す existential body
+## An existential body through a dependent pair
 
-message を読み込む時点では matcher arity は runtime value です。`Dynamic : (tail : Nat) -> MatchPlan tail -> CompiledBody` が arity と、それに依存する plan を同じ constructor に package します。
+Matcher arity is a runtime value when a message is loaded. `Dynamic : (tail : Nat) -> MatchPlan tail -> CompiledBody` packages the arity together with the plan whose type depends on it.
 
-## 設計上あえて型にしなかったもの
+## What deliberately remains outside the types
 
-locale、function registry、external input の有無は runtime context です。ここまで compile-time type に押し込むと、翻訳資産の dynamic loading や plugin handler が使いにくくなります。Idris の力は「すべてを型にする」ことではなく、静的に決められる invariant を正しい境界で型に移すことに使います。
+The locale, function registry, and presence of external inputs belong to the runtime context. Encoding all of them in compile-time types would make dynamic translation loading and plugin handlers awkward. Idris reaches its full potential here not by putting everything in a type, but by moving each statically knowable invariant into the type at the correct boundary.
 
-## 対応実装
+## Corresponding implementation
 
 - [`IR`](../src/MF2/IR.idr)
 - [`Validate`](../src/MF2/Validate.idr)
 - [`Decimal`](../src/MF2/Decimal.idr)
 - [`TypeLevel`](../tests/TypeLevel.idr)
-

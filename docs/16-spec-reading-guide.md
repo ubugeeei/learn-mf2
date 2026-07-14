@@ -1,36 +1,35 @@
-# 仕様書の読み方
+# How to read the specification
 
-## version を固定する
+## Pin the version first
 
-最初に header の version と status を確認します。このコースの normative baseline は [LDML Part 9 Version 48.2](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html) です。Working Group repository では [`LDML48.2` tag](https://github.com/unicode-org/message-format-wg/tree/LDML48.2) を使います。
+Start by checking the document header's version and status. This course's normative baseline is [LDML Part 9 Version 48.2](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html). In the Working Group repository, use the [`LDML48.2` tag](https://github.com/unicode-org/message-format-wg/tree/LDML48.2).
 
-unversioned URL や `main` branch は将来内容が変わるため、fixture や conformance claim の根拠にはしません。
+Unversioned URLs and the `main` branch will change. Do not use them as evidence for fixture or conformance claims.
 
-## 推奨順序
+## Recommended reading order
 
-1. Introduction の terminology と stability policy。
-2. Syntax 全体を読み、最後に ABNF と照合。
-3. Formatting の resolved value と fallback。
-4. Pattern selection algorithm を擬似実行。
-5. Errors で phase boundary を確認。
-6. Default functions は string、number、date/time の順。
-7. Unicode namespace と bidi。
-8. Interchange data model。
-9. Security considerations。
+1. Read the terminology and stability policy in the Introduction.
+2. Read all of Syntax, then compare it with the ABNF.
+3. Study resolved values and fallback under Formatting.
+4. Execute the pattern-selection algorithm by hand.
+5. Use Errors to confirm phase boundaries.
+6. Read default functions in the order string, number, then date/time.
+7. Read the Unicode namespace and bidi handling.
+8. Read the interchange data model.
+9. Finish with Security Considerations.
 
-## normative と non-normative
+## Normative and non-normative material
 
-example は理解に有用ですが normative ではありません。MUST/SHOULD/MAY は BCP 14 の意味で使われます。実装判断では prose の要件、ABNF、error definition、test fixture を突き合わせます。
+Examples help understanding, but are not normative. MUST, SHOULD, and MAY have their BCP 14 meanings. Implementation decisions should be checked against the prose requirements, ABNF, error definitions, and test fixtures together.
 
-## spec と test がずれたら
+## When the specification and tests appear to disagree
 
-1. 同じ release tag か確認。
-2. fixture schema の optional/draft tag を確認。
-3. implementation-dependent output か確認。
-4. specification issue/corrigendum を探す。
-5. 推測で fixture を書き換えず、最小 reproduction を残す。
+1. Confirm that both come from the same release tag.
+2. Check optional and draft tags in the fixture schema.
+3. Determine whether the output is implementation-dependent.
+4. Search for a specification issue or corrigendum.
+5. Preserve a minimal reproduction instead of editing the fixture by guesswork.
 
-## 全リンク
+## Complete index
 
-このリポジトリで参照する normative/non-normative source は [仕様リンク総覧](appendices/spec-index.md) に集約しています。
-
+Every normative and non-normative source referenced by this repository is collected in the [complete specification index](appendices/spec-index.md).

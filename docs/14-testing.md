@@ -1,20 +1,20 @@
-# テスト戦略
+# Testing strategy
 
-## 三層で壊す
+## Three layers of resistance
 
-1. compile-time proof: 型が合わない IR を作れないこと。
-2. official conformance fixtures: Unicode WG と解釈を揃えること。
-3. generated/handwritten cases: decimal、runtime、regression を広く叩くこと。
+1. Compile-time proofs prevent construction of invalid IR.
+2. Official conformance fixtures keep the implementation aligned with the Unicode Working Group.
+3. Generated and handwritten cases exercise decimal arithmetic, runtime behavior, and regressions broadly.
 
-## compile-time tests
+## Compile-time tests
 
-[`TypeLevel`](../tests/TypeLevel.idr) は二 selector plan と二 key variant、all-catchall proof を組み立てます。`Vect` の長さを変えると test executable を起動する前に typecheck が失敗します。
+[`TypeLevel`](../tests/TypeLevel.idr) constructs a two-selector plan, a two-key variant, and an all-catch-all proof. Changing a `Vect` length makes type checking fail before the test executable starts.
 
-## official snapshot
+## Official snapshot
 
-fixture は mutable `main` branch ではなく `LDML48.2` tag と commit `7f142fb4f1f5ea6ab1eb34ce2b87e918ca9fd331` に固定しています。
+Fixtures are pinned to the `LDML48.2` tag and commit `7f142fb4f1f5ea6ab1eb34ce2b87e918ca9fd331`, not to a mutable `main` branch.
 
-| upstream suite | local assertions |
+| Upstream suite | Local assertions |
 |---|---:|
 | `syntax.json` | 114 |
 | `syntax-errors.json` | 133 |
@@ -23,17 +23,17 @@ fixture は mutable `main` branch ではなく `LDML48.2` tag と commit `7f142f
 | `pattern-selection.json` | 22 |
 | `u-options.json` | 10 |
 
-fixture の license と provenance は [`NOTICE`](../tests/NOTICE.md) を参照してください。
+See [`NOTICE`](../tests/NOTICE.md) for fixture provenance and licensing.
 
-## generated decimal tests
+## Generated decimal tests
 
-正負 integer の広い範囲を生成し `parseDecimal` と `renderDecimal` の round-trip を検査します。fraction、exponent、leading zero、empty fraction、truncate toward zero も独立ケースがあります。
+The suite generates a broad range of positive and negative integers and checks the `parseDecimal`/`renderDecimal` round trip. Fractions, exponents, leading zeros, an empty fractional component, and truncation toward zero also have independent cases.
 
-## regression table
+## Regression table
 
-markup、fallback、全 default function、English/Japanese plural、ordinal、複数 selector、indirect annotation を table-driven test にしています。
+Table-driven tests cover markup, fallback, every default function, English and Japanese plural behavior, ordinals, multiple selectors, and indirect annotations.
 
-## 実行
+## Running the suite
 
 ```console
 $ make test
@@ -41,11 +41,10 @@ $ make check
 $ nix flake check --print-build-logs
 ```
 
-test count を文書に固定値として信じず、最終出力の `N passed; 0 failed` を証拠にします。
+Do not trust a fixed test count in prose. Treat the runner's final `N passed; 0 failed` line as the evidence.
 
-## 仕様
+## Specifications
 
 - [Unicode MF2 test suite](https://github.com/unicode-org/message-format-wg/tree/LDML48.2/test)
-- [test schema](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/test/schemas/v0/tests.schema.json)
+- [Test schema](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/test/schemas/v0/tests.schema.json)
 - [Unicode License](https://www.unicode.org/license.txt)
-

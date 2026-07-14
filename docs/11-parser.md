@@ -1,20 +1,20 @@
 # Total recursive-descent parser
 
-## なぜ parser combinator dependency を使わないか
+## Why there is no parser-combinator dependency
 
-このリポジトリでは ABNF と code の対応、source span、fuel による termination を見える形にするため parser を実装しています。production で dependency を避けること自体が目的ではなく、grammar のどの制約をどこで実装するかを学ぶためです。
+This repository implements its own parser so the correspondence between the ABNF and code, source spans, and fuel-based termination remain visible. Avoiding a dependency is not an end in itself for production; the purpose is to learn exactly where each grammar constraint is enforced.
 
-## cursor
+## Cursor
 
-`Cursor` は残りの `List Char` と code-point offset を持ちます。byte offset にしないため、Unicode source の diagnostic span が grammar の単位と一致します。
+`Cursor` contains the remaining `List Char` and a code-point offset. Using a code-point rather than byte offset keeps diagnostic spans for Unicode source in the same unit as the grammar.
 
-## fuel
+## Fuel
 
-`parsePatternLoop : Nat -> ...` のように、相互再帰する production は source length から計算した fuel を減らします。Idris termination checker は path ごとの input consumption を推測する必要がありません。
+Mutually recursive productions such as `parsePatternLoop : Nat -> ...` decrement fuel derived from the source length. The Idris termination checker therefore does not need to infer input consumption along every possible path.
 
-## grammar mapping
+## Grammar mapping
 
-| ABNF | implementation |
+| ABNF | Implementation |
 |---|---|
 | `message` | `parse` / `parseComplex` |
 | `pattern` | `parsePatternLoop` |
@@ -26,17 +26,16 @@
 | `literal` | `parseLiteral` |
 | `identifier` | `parseIdentifier` |
 
-## whitespace の罠
+## The whitespace trap
 
-MF2 の `s` は required whitespace、`o` は optional whitespace です。Bidi mark/isolate は両者の周辺に現れられます。simple pattern の whitespace は text、complex structure の whitespace は insignificant なので、早期に一括 trim してはいけません。
+MF2 uses `s` for required whitespace and `o` for optional whitespace. Bidi marks and isolates may appear around both. Whitespace in a simple pattern is text, while structural whitespace in a complex message is insignificant, so the complete source must never be trimmed up front.
 
-## official syntax fixtures
+## Official syntax fixtures
 
-[`OfficialFixtures`](../tests/OfficialFixtures.idr) は 48.2 の valid syntax 114 件と syntax-error 133 件をそのまま実行します。parser を修正したら、手元の example だけでなく全 fixture を回してください。
+[`OfficialFixtures`](../tests/OfficialFixtures.idr) runs all 114 valid syntax cases and all 133 syntax-error cases from Version 48.2. After changing the parser, run the complete fixture set rather than only local examples.
 
-## 仕様
+## Specifications
 
 - [Syntax](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/syntax.md)
 - [ABNF](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/message.abnf)
 - [RFC 5234: ABNF](https://www.rfc-editor.org/rfc/rfc5234)
-

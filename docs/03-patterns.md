@@ -1,50 +1,49 @@
-# Message、pattern、text、escape
+# Messages, patterns, text, and escapes
 
-## simple と complex
+## Simple and complex messages
 
-simple message は pattern 一つです。空文字列も valid です。
+A simple message consists of one pattern. An empty string is also valid.
 
 ```mf2
 Hello, {$name}!
 ```
 
-declaration または matcher を持つ場合は complex message です。complex body は quoted pattern `{{...}}` または matcher になります。
+A message with a declaration or matcher is a complex message. Its body is either a quoted pattern `{{...}}` or a matcher.
 
 ```mf2
 .local $answer = {42 :number}
 {{The answer is {$answer}.}}
 ```
 
-complex message の構造用 whitespace は無視されますが、pattern 内の whitespace は常に text の一部です。
+Structural whitespace in a complex message is ignored, but whitespace inside a pattern is always part of its text.
 
-## pattern part
+## Pattern parts
 
-pattern は text、expression placeholder、markup placeholder の和型です。[`PatternPart`](../src/MF2/Syntax.idr) は `Text | Place | Mark` としてこれを直接表します。文字列一つへ早期に潰さないため、markup や expression metadata を安全に保持できます。
+A pattern is a sum of text, expression placeholders, and markup placeholders. [`PatternPart`](../src/MF2/Syntax.idr) represents this directly as `Text | Place | Mark`. By avoiding an early conversion to one string, the compiler can preserve markup and expression metadata safely.
 
-## escape
+## Escapes
 
-pattern では `\\`、`\{`、`\}`、`\|` のみが escape です。`\\n` のような programming-language escape を MF2 自体は定義しません。outer format が改行の符号化を担当します。
+Within a pattern, only `\\`, `\{`, `\}`, and `\|` are escapes. MF2 does not define programming-language escapes such as `\\n`; the outer format is responsible for encoding newlines.
 
 ```mf2
 Curly braces: \{ and \}; slash: \\; pipe: \|
 ```
 
-quoted literal の delimiter は `|` です: `{|spaces and @ special characters|}`。
+The delimiter for a quoted literal is `|`: `{|spaces and @ special characters|}`.
 
 ## Unicode scalar boundary
 
-grammar は広い code-point 範囲を許します。一方、Idris 2 の `Char` が表現できない不正 UTF scalar を parser 入口で生成することはできません。この host-language boundary は [conformance matrix](appendices/conformance-matrix.md) に明記しています。
+The grammar permits broad code-point ranges. However, an invalid Unicode scalar that Idris 2's `Char` cannot represent cannot be produced at the parser entry point. This host-language boundary is explicit in the [conformance matrix](appendices/conformance-matrix.md).
 
-## 対応実装
+## Corresponding implementation
 
-- [`parsePatternLoop`](../src/MF2/Parser.idr)
-- [`parseEscape`](../src/MF2/Parser.idr)
+- [`parsePatternLoop`](../src/MF2/Parser/Expression.idr)
+- [`parseEscape`](../src/MF2/Parser/Core.idr)
 - [`PatternPart`](../src/MF2/Syntax.idr)
 
-## 仕様
+## Specifications
 
 - [Messages and their syntax](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#messages-and-their-syntax)
 - [Pattern](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#pattern)
 - [Escape sequences](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#escape-sequences)
 - [Complete ABNF](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/message.abnf)
-

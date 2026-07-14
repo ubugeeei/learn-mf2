@@ -8,14 +8,20 @@ license = "MIT"
 sourcedir = "src"
 modules = MF2.Diagnostic,
           MF2.Syntax,
+          MF2.Parser.Core,
+          MF2.Parser.Expression,
+          MF2.Parser.Message,
           MF2.Parser,
           MF2.IR,
           MF2.Validate,
           MF2.Decimal,
+          MF2.Runtime.Types,
+          MF2.Runtime.Handlers,
+          MF2.Runtime.Resolution,
+          MF2.Runtime.Format,
           MF2.Runtime,
           MF2.Compiler
 
 main = Main
 executable = mf2
 opts = "--total"
-

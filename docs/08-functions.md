@@ -1,23 +1,23 @@
-# Default function 完全ガイド
+# Complete guide to default functions
 
-function は syntax の一部であると同時に runtime extension point です。48.2 の default function 名を reference runtime はすべて受理します。
+Functions are both part of the syntax and the runtime extension point. The reference runtime recognizes every default function name in Version 48.2.
 
-| function | format | select | reference backend |
+| Function | Format | Select | Reference backend |
 |---|---:|---:|---|
-| `:string` | yes | exact string | 実装済み |
-| `:number` | yes | exact/cardinal/ordinal | exact decimal + 教学用 locale rules |
-| `:integer` | yes | exact/cardinal/ordinal | 0 方向への truncate |
-| `:offset` | yes | numeric | exact integer add/subtract |
-| `:percent` | yes | numeric | exact multiplication + `%` |
-| `:currency` | yes | no | locale-neutral `CODE value` |
-| `:unit` | yes | no | locale-neutral `value unit`、48.2 では Draft |
-| `:datetime` | yes | no | temporal handler seam |
-| `:date` | yes | no | temporal handler seam |
-| `:time` | yes | no | temporal handler seam |
+| `:string` | yes | exact string | Implemented |
+| `:number` | yes | exact/cardinal/ordinal | Exact decimal plus teaching locale rules |
+| `:integer` | yes | exact/cardinal/ordinal | Truncate toward zero |
+| `:offset` | yes | numeric | Exact integer addition/subtraction |
+| `:percent` | yes | numeric | Exact multiplication plus `%` |
+| `:currency` | yes | no | Locale-neutral `CODE value` |
+| `:unit` | yes | no | Locale-neutral `value unit`; Draft in 48.2 |
+| `:datetime` | yes | no | Temporal handler seam |
+| `:date` | yes | no | Temporal handler seam |
+| `:time` | yes | no | Temporal handler seam |
 
-## exact decimal
+## Exact decimals
 
-MF2 `number-literal` は arbitrary precision です。binary `Double` では `0.1` や非常に大きな integer を正確に保持できません。[`Decimal`](../src/MF2/Decimal.idr) は `coefficient : Integer` と `scale : Nat` で表し、exponent notation も lossless に読みます。
+The MF2 `number-literal` has arbitrary precision. A binary `Double` cannot exactly preserve values such as `0.1` or very large integers. [`Decimal`](../src/MF2/Decimal.idr) uses `coefficient : Integer` and `scale : Nat`, and parses exponent notation without loss.
 
 ```mf2
 {1.25 :number}
@@ -26,13 +26,13 @@ MF2 `number-literal` は arbitrary precision です。binary `Double` では `0.
 {3 :offset subtract=2}
 ```
 
-## locale data boundary
+## Locale-data boundary
 
-function の「名前を受理する」ことと、全 option の locale output を独自実装することは別です。grouping、currency symbol、unit preference、calendar、time zone、plural data は CLDR/ICU の大きなデータセットです。本リポジトリは compiler semantics と handler API を自前実装し、production locale backend は `Registry` から注入します。
+Recognizing a function name is different from independently implementing localized output for every option. Grouping, currency symbols, unit preferences, calendars, time zones, and plural rules depend on the large CLDR/ICU datasets. This repository implements the compiler semantics and handler API; a production locale backend is injected through `Registry`.
 
-この境界を曖昧にしないため、built-in の教学用出力と production conformance を [matrix](appendices/conformance-matrix.md) で分けています。
+To keep this boundary explicit, the [conformance matrix](appendices/conformance-matrix.md) distinguishes built-in teaching output from production conformance.
 
-## custom function
+## Custom functions
 
 ```idris
 record FunctionHandler where
@@ -42,20 +42,19 @@ record FunctionHandler where
       -> Either Diagnostic ResolvedValue
 ```
 
-custom handler は formatting、selection、direction metadata、resolved option inheritance に必要な情報を返せます。application function には namespace を付けます。
+A custom handler can return the information required for formatting, selection, direction metadata, and inheritance of resolved options. Application functions should use a namespace.
 
-## 対応実装
+## Corresponding implementation
 
 - [`Decimal`](../src/MF2/Decimal.idr)
-- [`runDefault`](../src/MF2/Runtime.idr)
-- [`FunctionHandler`](../src/MF2/Runtime.idr)
+- [`runDefault`](../src/MF2/Runtime/Handlers.idr)
+- [`FunctionHandler`](../src/MF2/Runtime/Types.idr)
 
-## 仕様
+## Specifications
 
 - [Default functions](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#default-functions)
 - [`:string`](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/string.md)
-- [numeric functions](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/number.md)
-- [date/time functions](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/datetime.md)
+- [Numeric functions](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/number.md)
+- [Date/time functions](https://github.com/unicode-org/message-format-wg/blob/LDML48.2/spec/functions/datetime.md)
 - [LDML Numbers 48.2](https://www.unicode.org/reports/tr35/tr35-78/tr35-numbers.html)
 - [LDML Dates 48.2](https://www.unicode.org/reports/tr35/tr35-78/tr35-dates.html)
-

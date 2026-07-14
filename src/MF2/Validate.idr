@@ -10,7 +10,6 @@ import MF2.Syntax
 public export
 Validation : Type -> Type
 Validation result = Either (List Diagnostic) result
-
 contains : Eq element => element -> List element -> Bool
 contains expected [] = False
 contains expected (element :: rest) = expected == element || contains expected rest
@@ -24,7 +23,6 @@ duplicates elements = go [] elements
       if contains element seen
          then element :: go seen rest
          else go (element :: seen) rest
-
 optionErrors : List Option -> List Diagnostic
 optionErrors options = map toError (duplicates (map (.name) options))
   where
@@ -230,9 +228,8 @@ compileMatch declarations names@(firstName :: otherNames) rawVariants =
         _ => Left [point VariantKeyMismatch 0
                    "internal arity conversion failed after successful validation"]
 
-||| Validate all stable MF2 data-model constraints and refine the raw syntax
-||| tree into the dependently typed compiler IR. Data-model diagnostics are
-||| accumulated so authoring tools can show more than the first problem.
+||| Validate every stable MF2 data-model constraint and refine raw syntax into
+||| dependent IR, accumulating diagnostics for authoring tools.
 public export
 validate : RawMessage -> Validation CompiledMessage
 validate message =

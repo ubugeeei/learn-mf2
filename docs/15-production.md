@@ -1,48 +1,47 @@
-# Security と production boundary
+# Security and production boundaries
 
-## message source を code とみなさない
+## Do not treat message source as code
 
-MF2 function と markup の identifier は application registry の key です。任意の reflection、module load、HTML evaluation に接続してはいけません。registry は explicit allowlist にします。
+MF2 function and markup identifiers are keys into an application registry. Never connect them to arbitrary reflection, module loading, or HTML evaluation. The registry must be an explicit allowlist.
 
-## custom handler
+## Custom handlers
 
-handler は read-only の最小 context を受け、execution time と resource usage を制限します。ネットワーク、filesystem、mutable global state に触れる handler は結果の再現性と call-by-need semantics を壊しやすくなります。
+Give handlers a minimal read-only context and bound their execution time and resource use. Handlers that access the network, file system, or mutable global state make reproducibility and call-by-need semantics much harder to preserve.
 
 ## Unicode
 
-- identifier/literal の invisible character と bidi control を UI で可視化する。
-- translation editor では confusable と mixed-script を警告する。
-- pattern selection key は仕様上 NFC normalization が必要。
-- untrusted outer format の decoding error を parser 前に処理する。
+- Make invisible characters and bidi controls in identifiers and literals visible in tooling.
+- Warn about confusables and mixed scripts in translation editors.
+- Apply the NFC normalization required by pattern-selection keys.
+- Handle decoding errors in an untrusted outer format before invoking the parser.
 
-reference runtime は NFC library を同梱していないため、非 ASCII key の canonical equivalence は production integration で補う必要があります。
+The reference runtime does not bundle an NFC library, so production integration must supply canonical equivalence for non-ASCII keys.
 
-## rich text
+## Rich text
 
-`MarkupOutput` を HTML string に連結しません。identifier ごとに許可した component/function へ mapping し、option value も component 側で validate します。
+Do not concatenate `MarkupOutput` into an HTML string. Map each identifier to an allowlisted component or function, then validate option values within that component.
 
-## locale backend
+## Locale backend
 
-全 locale の正しい number/date/unit/currency output には current CLDR data、TZDB、calendar implementation が必要です。reference backend の locale-neutral output を production UI の完成形として使わず、ICU 等の handler を注入します。
+Correct number, date, unit, and currency output for every locale requires current CLDR data, TZDB, and calendar implementations. Do not use the reference backend's locale-neutral output as finished production UI; inject an ICU or comparable handler.
 
-## resource limits
+## Resource limits
 
-parser fuel は nontermination を防ぎますが、極端に長い message、巨大な number literal、variant 数には application-level size limit も設定してください。`Integer` は arbitrary precision なので memory exhaustion の対象になります。
+Parser fuel prevents nontermination, but applications should also limit message length, number-literal length, and variant count. Because `Integer` is arbitrary precision, extremely large numeric inputs can exhaust memory.
 
-## checklist
+## Checklist
 
-- source size、variant count、literal length の上限
-- registry allowlist と handler timeout
-- CLDR/TZDB version pin
+- Limits for source size, variant count, and literal length
+- Registry allowlist and handler timeouts
+- Pinned CLDR and TZDB versions
 - NFC normalization
-- markup component allowlist
-- diagnostic の logging と user-safe fallback
-- translated message を fixture と locale matrix で test
+- Markup component allowlist
+- Diagnostic logging and user-safe fallback
+- Translated-message tests over a fixture and locale matrix
 
-## 仕様
+## Specifications
 
 - [MF2 Security Considerations](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#security-considerations)
 - [Unicode Security Mechanisms, UTS #39](https://www.unicode.org/reports/tr39/)
 - [Unicode Normalization Forms, UAX #15](https://www.unicode.org/reports/tr15/)
 - [Unicode Bidirectional Algorithm, UAX #9](https://www.unicode.org/reports/tr9/)
-

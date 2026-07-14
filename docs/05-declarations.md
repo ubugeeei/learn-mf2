@@ -1,8 +1,8 @@
-# Declaration と call-by-need
+# Declarations and call-by-need
 
 ## `.input`
 
-input declaration は external input を message 内へ明示し、必要なら function を一度適用します。
+An input declaration makes an external input explicit within the message and may apply a function once.
 
 ```mf2
 .input {$count :number}
@@ -10,16 +10,16 @@ input declaration は external input を message 内へ明示し、必要なら 
 
 ## `.local`
 
-local declaration は expression の resolved value を新しい名前へ束縛します。
+A local declaration binds an expression's resolved value to a new name.
 
 ```mf2
 .local $price = {$raw :currency currency=JPY}
 {{Price: {$price}}}
 ```
 
-## 再宣言と implicit declaration
+## Redeclaration and implicit declarations
 
-declaration は shadowing 可能な `let` ではありません。以前の declaration 内で external variable として参照した名前を後から宣言することも duplicate-declaration です。self-reference も同じ error になります。
+Declarations are not shadowable `let` bindings. A name previously referenced as an external variable cannot be declared later: doing so is a duplicate-declaration error. Self-reference produces the same error.
 
 ```mf2
 .local $a = {$future}
@@ -27,13 +27,13 @@ declaration は shadowing 可能な `let` ではありません。以前の decl
 {{invalid}}
 ```
 
-validator は bound name だけでなく、それまでに現れた variable reference を追跡します。input declaration の自分自身の operand は binding の定義なので例外ですが、その function option で自分を参照することはできません。
+The validator tracks both bound names and all variable references encountered so far. The input declaration's own operand is an exception because it defines the binding, but the declaration cannot refer to itself from one of its function options.
 
-## 一度だけ評価
+## Evaluate at most once
 
-function handler は mutable clock 等を読む可能性があるため、同じ declaration を複数回評価してはいけません。runtime は declaration を source order で一度だけ解決し、`ResolvedEnv` に保存します。これは eager ですが「at most once」を満たし、call-by-name にはなりません。
+A function handler may read a mutable clock or another changing resource, so a declaration must not be evaluated repeatedly. The runtime resolves declarations exactly once in source order and stores each result in `ResolvedEnv`. This strategy is eager, but it satisfies “at most once” and is not call-by-name.
 
-indirect selector annotation も伝播します。
+Indirect selector annotations are propagated as well.
 
 ```mf2
 .input {$a :string}
@@ -43,16 +43,15 @@ x {{yes}}
 * {{no}}
 ```
 
-## 対応実装
+## Corresponding implementation
 
 - [`Declaration`](../src/MF2/Syntax.idr)
 - [`declarationErrors`](../src/MF2/Validate.idr)
 - [`annotationEnvironment`](../src/MF2/Validate.idr)
-- [`evaluateDeclarations`](../src/MF2/Runtime.idr)
+- [`evaluateDeclarations`](../src/MF2/Runtime/Resolution.idr)
 
-## 仕様
+## Specifications
 
 - [Declarations](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#declarations)
 - [Formatting context](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#formatting-context)
 - [Resolved values](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#resolved-values)
-

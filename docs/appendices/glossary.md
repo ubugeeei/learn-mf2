@@ -1,27 +1,26 @@
 # Glossary
 
-| term | 意味 |
+| Term | Meaning |
 |---|---|
-| message | 一回の formatting request を表す template 全体 |
-| simple message | declaration/matcher を持たない pattern |
-| complex message | declaration または matcher を持つ message |
-| pattern | text/expression/markup part の列 |
-| placeholder | `{...}` で囲まれた expression または markup |
-| operand | expression が function へ渡す literal/variable |
-| annotation | `:number` 等の function reference |
-| external variable | Context の input mapping から得る値 |
-| local variable | `.local` が作る resolved value |
-| selector | matcher が variant 選択に使う annotated variable |
-| variant | key vector と quoted pattern の組 |
-| catch-all | variant key の `*`。literal `|*|` とは異なる |
-| well-formed | ABNF grammar を満たす状態 |
-| valid | well-formed かつ data-model constraints を満たす状態 |
-| resolved value | formatting/selection/direction 等の capability を持つ runtime value |
-| fallback | resolution failure を表示可能にする代替 value |
-| function handler | annotation を runtime value へ解決する application/default procedure |
-| formatting context | locale、direction、inputs、registry 等 |
-| bidi isolation | LTR/RTL spillover を防ぐ Unicode isolate controls |
-| CLDR | locale data と rules を提供する Unicode project |
-| arity | matcher の selector 数、すなわち各 variant の key 数 |
-| refinement | raw data を検査し、より強い invariant の型へ変換すること |
-
+| message | The complete template for one formatting request |
+| simple message | A pattern with no declarations or matcher |
+| complex message | A message containing declarations or a matcher |
+| pattern | A sequence of text, expression, and markup parts |
+| placeholder | An expression or markup node enclosed in `{...}` |
+| operand | A literal or variable supplied by an expression to a function |
+| annotation | A function reference such as `:number` |
+| external variable | A value obtained from the context's input mapping |
+| local variable | A resolved value created by `.local` |
+| selector | An annotated variable a matcher uses to select a variant |
+| variant | A key vector paired with a quoted pattern |
+| catch-all | The variant key `*`, distinct from the literal `|*|` |
+| well-formed | Satisfying the ABNF grammar |
+| valid | Well-formed and satisfying all data-model constraints |
+| resolved value | A runtime value with formatting, selection, direction, and related capabilities |
+| fallback | A replacement value that keeps a resolution failure displayable |
+| function handler | A default or application procedure that resolves an annotation into a runtime value |
+| formatting context | The locale, direction, inputs, registry, and related runtime state |
+| bidi isolation | Unicode isolate controls that prevent LTR/RTL spillover |
+| CLDR | The Unicode project that supplies locale data and rules |
+| arity | The matcher selector count, and therefore each variant's key count |
+| refinement | Validating raw data into a type with stronger invariants |

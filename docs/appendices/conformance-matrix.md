@@ -1,69 +1,69 @@
 # LDML 48.2 conformance matrix
 
-この表は claim を過大にしないための実装境界です。`yes` は local tests と公式 fixture で継続検証、`reference` はアルゴリズム学習用の実装、`external` は production handler/data backend が必要、`not yet` は未実装です。
+This table defines implementation boundaries precisely and avoids overstated claims. `yes` means continuously checked by local tests and official fixtures; `reference` means an implementation intended for studying the algorithm; `external` requires a production handler or data backend; and `not yet` means unimplemented.
 
-## Syntax と data model
+## Syntax and data model
 
-| requirement | status | evidence |
+| Requirement | Status | Evidence |
 |---|---|---|
-| simple/complex message | yes | official syntax fixtures |
-| declarations | yes | parser + duplicate declaration fixtures |
-| quoted pattern/text/escape | yes | official syntax/error fixtures |
-| expression/operand/function/options | yes | official syntax fixtures |
-| markup/attributes | yes | official syntax + u-options fixtures |
-| matcher/variants/keys | yes | official syntax + pattern-selection fixtures |
-| identifier Unicode ranges | yes within Idris `Char` | parser character classes |
-| host representation of unpaired surrogate | not representable | Idris scalar boundary |
-| variant key arity | yes, type-refined | `Vect n Key` |
-| all-catchall fallback | yes, proved | erased `AllCatchall` proof |
-| selector annotation direct/indirect | yes | validator + fixtures |
-| duplicate option/declaration/variant | yes | official data-model fixtures |
+| Simple and complex messages | yes | Official syntax fixtures |
+| Declarations | yes | Parser plus duplicate-declaration fixtures |
+| Quoted pattern, text, and escapes | yes | Official syntax/error fixtures |
+| Expressions, operands, functions, and options | yes | Official syntax fixtures |
+| Markup and attributes | yes | Official syntax plus u-options fixtures |
+| Matchers, variants, and keys | yes | Official syntax plus pattern-selection fixtures |
+| Identifier Unicode ranges | yes within Idris `Char` | Parser character classes |
+| Host representation of an unpaired surrogate | not representable | Idris scalar boundary |
+| Variant-key arity | yes, type-refined | `Vect n Key` |
+| All-catch-all fallback | yes, proved | Erased `AllCatchall` proof |
+| Direct/indirect selector annotation | yes | Validator plus fixtures |
+| Duplicate options, declarations, and variants | yes | Official data-model fixtures |
 
 ## Formatting
 
-| requirement | status | note |
+| Requirement | Status | Note |
 |---|---|---|
-| formatting context/input mapping | yes | `Context` |
-| literal/variable/function resolution | yes | official fallback fixtures |
-| options as order-insensitive mapping | yes | resolved list after duplicate validation |
-| declaration evaluation at most once | yes | eager, source-order memoization |
-| fallback representations | yes | official fallback output fixtures |
-| pattern selection | yes for supplied selection operations | official pattern-selection fixtures |
-| string exact selection | yes | built-in handler |
-| numeric exact selection | yes | arbitrary-precision decimal |
-| all CLDR plural locales | external | reference includes en/fr/ja/zh/ko teaching rules |
-| NormalizeKey NFC | external | Unicode normalization backend required |
-| structured parts | yes | `OutputPart` |
-| markup empty in string target | yes | runtime + fixtures |
-| default bidi strategy | yes | official u-options output fixtures |
+| Formatting context and input mapping | yes | `Context` |
+| Literal, variable, and function resolution | yes | Official fallback fixtures |
+| Options as an order-insensitive mapping | yes | Resolved list after duplicate validation |
+| Declaration evaluation at most once | yes | Eager, source-order memoization |
+| Fallback representations | yes | Official fallback-output fixtures |
+| Pattern selection | yes for supplied selection operations | Official pattern-selection fixtures |
+| Exact string selection | yes | Built-in handler |
+| Exact numeric selection | yes | Arbitrary-precision decimal |
+| Every CLDR plural locale | external | Reference rules cover en/fr/ja/zh/ko for teaching |
+| `NormalizeKey` NFC | external | Requires a Unicode-normalization backend |
+| Structured parts | yes | `OutputPart` |
+| Empty markup in a string target | yes | Runtime plus fixtures |
+| Default bidi strategy | yes | Official u-options output fixtures |
 
 ## Default functions
 
-| function | accepted | full locale formatting |
+| Function | Accepted | Full locale formatting |
 |---|---:|---:|
 | `:string` | yes | yes for string semantics |
-| `:number` | yes | external for full CLDR options |
-| `:integer` | yes | external for full CLDR options |
+| `:number` | yes | external for complete CLDR options |
+| `:integer` | yes | external for complete CLDR options |
 | `:offset` | yes | reference exact arithmetic |
-| `:currency` | yes | external for symbols/patterns |
+| `:currency` | yes | external for symbols and patterns |
 | `:percent` | yes | external for locale patterns |
-| `:unit` (Draft in 48.2) | yes | external for conversion/preferences |
-| `:datetime` | yes | external for calendars/skeletons/TZDB |
-| `:date` | yes | external for calendars/skeletons/TZDB |
-| `:time` | yes | external for calendars/skeletons/TZDB |
+| `:unit` (Draft in 48.2) | yes | external for conversion and preferences |
+| `:datetime` | yes | external for calendars, skeletons, and TZDB |
+| `:date` | yes | external for calendars, skeletons, and TZDB |
+| `:time` | yes | external for calendars, skeletons, and TZDB |
 
-「accepted」は unknown-function にしないことを表し、すべての option が locale 固有の完成出力を生むという意味ではありません。unsupported combination を production backend が diagnostic にする余地があります。
+“Accepted” means the function does not produce unknown-function. It does not claim that every option combination produces finished locale-specific output. A production backend may return a diagnostic for an unsupported combination.
 
-## Interchange と tooling
+## Interchange and tooling
 
-| feature | status |
+| Feature | Status |
 |---|---|
-| internal data model | yes |
+| Internal data model | yes |
 | JSON `message.json` import/export | not yet |
 | XML representation | not yet |
-| source-preserving concrete syntax tree | not yet |
-| rich source locations for every token | partial: expression/declaration/variant/option |
+| Source-preserving concrete syntax tree | not yet |
+| Rich source locations for every token | partial: expression/declaration/variant/option |
 
 ## Test evidence
 
-公式 `LDML48.2` snapshot 310 cases（syntax 114、syntax-error 133、data-model 23、runtime 40）に加え、generated decimal と regression tests を実行します。正確な総数は `make test` の出力を参照してください。
+The suite runs 310 cases from the official `LDML48.2` snapshot—114 syntax, 133 syntax-error, 23 data-model, and 40 runtime cases—plus generated decimal and regression tests. Run `make test` for the authoritative total assertion count.

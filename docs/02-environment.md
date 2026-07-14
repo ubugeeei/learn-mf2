@@ -1,8 +1,8 @@
-# 環境構築と最初の実行
+# Environment setup and your first run
 
 ## Nix shell
 
-Idris 2 の version drift を避けるため、環境は [`flake.nix`](../flake.nix) で固定します。
+The development environment is pinned in [`flake.nix`](../flake.nix) to prevent Idris 2 version drift.
 
 ```console
 $ nix develop
@@ -11,16 +11,16 @@ $ make build
 $ make test
 ```
 
-開発時の正規コマンドは次の通りです。
+These are the canonical development commands:
 
-| command | 内容 |
+| Command | Purpose |
 |---|---|
-| `make build` | `mf2` executable を生成 |
-| `make typecheck` | code generation なしで全 module を検査 |
-| `make test` | compiler を build 後、全 test を実行 |
-| `make docs` | `|||` documentation comment から HTML を生成 |
-| `make check` | 上記の release gate |
-| `nix flake check` | isolated Nix build で test |
+| `make build` | Build the `mf2` executable |
+| `make typecheck` | Check every module without code generation |
+| `make test` | Build the compiler, then run every test |
+| `make docs` | Generate HTML from `|||` documentation comments |
+| `make check` | Run the complete release gate, including documentation links and the 250-line file-size budget |
+| `nix flake check` | Run the tests in an isolated Nix build |
 
 ## CLI
 
@@ -31,17 +31,16 @@ $ ./build/exec/mf2 format 'Hello, {$name}!' name=Ada
 Hello, Ada!
 ```
 
-CLI は `name=value` が MF2 `number-literal` に一致すれば exact decimal、それ以外は string として渡します。アプリケーション API では [`Value`](../src/MF2/Runtime.idr) を直接構築でき、date/time/unit/currency も型で渡せます。
+The CLI converts a `name=value` argument to an exact decimal when its value matches the MF2 `number-literal` grammar; otherwise it supplies a string. Application code can construct [`Value`](../src/MF2/Runtime/Types.idr) directly, including typed date, time, unit, and currency values.
 
-## IDE と documentation
+## IDE and documentation
 
-LSP を使う場合も `nix develop` 内から起動してください。公開 API の説明はすべて Idris の `|||` comment に置き、本文と同じ設計根拠を API documentation から読めるようにしています。
+Start your language server inside `nix develop` as well. Every public API has an Idris `|||` comment so that the API documentation presents the same design rationale as this handbook.
 
-## 対応実装
+## Corresponding implementation
 
 - [`flake.nix`](../flake.nix)
 - [`Makefile`](../Makefile)
 - [`mf2.ipkg`](../mf2.ipkg)
 - [`Main`](../src/Main.idr)
 - [GitHub Actions](../.github/workflows/ci.yml)
-

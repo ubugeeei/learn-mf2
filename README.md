@@ -1,10 +1,10 @@
 # learn-mf2
 
-Unicode MessageFormat 2（MF2）を、仕様を読むだけでなく、Idris 2 でコンパイラを実装しながら完全に理解するためのリポジトリです。対象仕様は公開済みの **Unicode LDML Part 9, Version 48.2** に固定しています。
+This repository is a comprehensive guide to Unicode MessageFormat 2 (MF2). It goes beyond reading the specification: you will implement and study a compiler in Idris 2. The normative baseline is pinned to the published **Unicode LDML Part 9, Version 48.2**.
 
-この実装は Idris を「構文が少し珍しい関数型言語」としては使いません。パース前の入力、well-formed な AST、valid なコンパイル済み IR を別の型にし、matcher の arity を `Vect` に持たせ、fallback がすべて `*` である証明を実行時から消去します。`--total` も全モジュールで強制します。
+This project does not use Idris as merely “a functional language with unusual syntax.” It gives distinct types to unparsed input, a well-formed AST, and valid compiled IR; stores matcher arity in `Vect`; and erases the proof that a fallback consists entirely of `*` keys from the runtime representation. Every module is also compiled with `--total`.
 
-## すぐ試す
+## Quick start
 
 ```console
 $ nix develop
@@ -19,50 +19,49 @@ $ ./build/exec/mf2 format \
 2 items
 ```
 
-`make check` はビルド、全テスト、Idris API documentation 生成を行います。テストには Unicode Working Group の `LDML48.2` snapshot から、syntax 114 件、syntax-error 133 件、data-model 23 件、runtime 40 件を取り込んでいます。生成系を含む現在の総 assertion 数はテスト出力を正としてください。
+`make check` builds the project, runs every test, and generates the Idris API documentation. The test suite imports 114 syntax cases, 133 syntax-error cases, 23 data-model cases, and 40 runtime cases from the Unicode Working Group's `LDML48.2` snapshot. Because the suite also contains generated cases, treat the assertion count printed by the test runner as authoritative.
 
-## 学習順
+## Learning path
 
-最初は [学習ロードマップ](docs/00-learning-path.md) から始めてください。仕様と実装を往復する順序を固定してあります。
+Start with the [learning roadmap](docs/00-learning-path.md). It provides a deliberate sequence for moving back and forth between the specification and the implementation.
 
-1. [なぜ MF2 が必要か](docs/01-why-mf2.md)
-2. [環境構築と最初の実行](docs/02-environment.md)
-3. [メッセージ、pattern、escape](docs/03-patterns.md)
-4. [expression、literal、variable](docs/04-expressions.md)
-5. [declaration と評価](docs/05-declarations.md)
-6. [matcher と variant selection](docs/06-matchers.md)
-7. [エラー体系](docs/07-errors.md)
-8. [default functions](docs/08-functions.md)
-9. [markup、attribute、bidi](docs/09-markup-bidi.md)
-10. [Idris による型設計](docs/10-idris-design.md)
-11. [total parser](docs/11-parser.md)
-12. [semantic validation](docs/12-validation.md)
-13. [runtime と extension](docs/13-runtime.md)
-14. [テスト戦略](docs/14-testing.md)
-15. [セキュリティと実運用境界](docs/15-production.md)
-16. [仕様書の読み方](docs/16-spec-reading-guide.md)
-17. [CLDR 49 draft との差分](docs/17-draft-49.md)
+1. [Why MF2 exists](docs/01-why-mf2.md)
+2. [Environment setup and your first run](docs/02-environment.md)
+3. [Messages, patterns, and escapes](docs/03-patterns.md)
+4. [Expressions, literals, and variables](docs/04-expressions.md)
+5. [Declarations and evaluation](docs/05-declarations.md)
+6. [Matchers and variant selection](docs/06-matchers.md)
+7. [The error model](docs/07-errors.md)
+8. [Default functions](docs/08-functions.md)
+9. [Markup, attributes, and bidirectional text](docs/09-markup-bidi.md)
+10. [Type-driven design in Idris](docs/10-idris-design.md)
+11. [The total parser](docs/11-parser.md)
+12. [Semantic validation](docs/12-validation.md)
+13. [The runtime and extensions](docs/13-runtime.md)
+14. [Testing strategy](docs/14-testing.md)
+15. [Security and production boundaries](docs/15-production.md)
+16. [How to read the specification](docs/16-spec-reading-guide.md)
+17. [Differences in the CLDR 49 draft](docs/17-draft-49.md)
 
-参照した規格・仕様・公式 fixture は [仕様リンク総覧](docs/appendices/spec-index.md) に一つ残らずまとめています。実装済み範囲と意図的な境界は [conformance matrix](docs/appendices/conformance-matrix.md) を確認してください。
+Every standard, specification, and official fixture referenced by the project is collected in the [complete specification index](docs/appendices/spec-index.md). See the [conformance matrix](docs/appendices/conformance-matrix.md) for a requirement-by-requirement account of implemented behavior and intentional boundaries.
 
-## 実装の入口
+## Implementation entry points
 
-- [`MF2.Parser`](src/MF2/Parser.idr): fuel により全域性を証明する recursive-descent parser
-- [`MF2.Syntax`](src/MF2/Syntax.idr): well-formed だが未検証の data model
-- [`MF2.Validate`](src/MF2/Validate.idr): data-model error の蓄積と型の refinement
-- [`MF2.IR`](src/MF2/IR.idr): `Vect (S n)`、`AllCatchall`、erased proof を持つ IR
-- [`MF2.Decimal`](src/MF2/Decimal.idr): arbitrary-precision decimal
-- [`MF2.Runtime`](src/MF2/Runtime.idr): resolution、selection、fallback、structured output、bidi
-- [`MF2.Compiler`](src/MF2/Compiler.idr): 公開 compile/format API
-- [`Main`](src/Main.idr): CLI
-- [`TestMain`](tests/TestMain.idr): property table と公式 fixture runner
-- [`TypeLevel`](tests/TypeLevel.idr): コンパイルそのものがテストになる型レベル例
+- [`MF2.Parser`](src/MF2/Parser.idr): public parser façade over [core cursor mechanics](src/MF2/Parser/Core.idr), [expressions and patterns](src/MF2/Parser/Expression.idr), and [messages and matchers](src/MF2/Parser/Message.idr)
+- [`MF2.Syntax`](src/MF2/Syntax.idr): the well-formed but unvalidated data model
+- [`MF2.Validate`](src/MF2/Validate.idr): data-model error accumulation and type refinement
+- [`MF2.IR`](src/MF2/IR.idr): IR built around `Vect (S n)`, `AllCatchall`, and erased proofs
+- [`MF2.Decimal`](src/MF2/Decimal.idr): arbitrary-precision decimal arithmetic
+- [`MF2.Runtime`](src/MF2/Runtime.idr): public runtime façade over [runtime types](src/MF2/Runtime/Types.idr), [default handlers](src/MF2/Runtime/Handlers.idr), [resolution and selection](src/MF2/Runtime/Resolution.idr), and [structured formatting](src/MF2/Runtime/Format.idr)
+- [`MF2.Compiler`](src/MF2/Compiler.idr): the public compile and format API
+- [`Main`](src/Main.idr): the CLI
+- [`TestMain`](tests/TestMain.idr): property tables and the official fixture runner
+- [`TypeLevel`](tests/TypeLevel.idr): examples where successful compilation is itself the test
 
-## 重要なスコープ
+## Important scope boundary
 
-compiler front-end（syntax、data-model validation、型付き matcher IR）は LDML 48.2 の公式 fixture を基準にしています。runtime は仕様アルゴリズムを学べる依存ゼロの reference backend で、全 default function 名を受理しますが、CLDR locale data 全量を同梱していません。そのため、全 locale の数値・通貨・単位・日時の表示を production 品質で行う部分は handler 境界から ICU 等へ接続する設計です。この差は「未記載の制限」にせず、[conformance matrix](docs/appendices/conformance-matrix.md) に項目単位で明示しています。
+The compiler front end—syntax, data-model validation, and typed matcher IR—is tested against the LDML 48.2 official fixtures. The runtime is a dependency-free reference backend designed to make the specification algorithms inspectable. It recognizes every default function name, but it does not bundle the complete CLDR locale dataset. Production-quality formatting for numbers, currencies, units, dates, and times across all locales is therefore connected through the handler boundary to ICU or a comparable backend. This is an explicit boundary, not an undocumented limitation; the [conformance matrix](docs/appendices/conformance-matrix.md) records it requirement by requirement.
 
 ## License
 
-プロジェクト本体は MIT License です。Unicode 公式 fixture 由来のデータには [`tests/LICENSE.unicode`](tests/LICENSE.unicode) が適用されます。由来は [`tests/NOTICE.md`](tests/NOTICE.md) に固定しています。
-
+The project itself is licensed under the MIT License. Data derived from official Unicode fixtures is covered by [`tests/LICENSE.unicode`](tests/LICENSE.unicode), with provenance pinned in [`tests/NOTICE.md`](tests/NOTICE.md).

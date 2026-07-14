@@ -1,51 +1,51 @@
-# 学習ロードマップ
+# Learning roadmap
 
-このコースのゴールは「MF2 の記法を使える」ではありません。次の問いに、仕様節と Idris の型を根拠に答えられる状態をゴールにします。
+The goal of this course is not merely to “use MF2 syntax.” By the end, you should be able to answer the following questions from both the relevant specification section and the corresponding Idris types.
 
-- simple message と complex message はどこで区別されるか。
-- well-formed と valid はなぜ別のフェーズか。
-- selector の annotation が必要なのはなぜか。
-- fallback variant があるのに pattern selection が非自明なのはなぜか。
-- resolution error 後も valid message が必ず出力を返せるのはなぜか。
-- markup を文字列へ直接埋めないことが、なぜ安全性につながるか。
-- locale data と message compiler の責務をどこで分けるべきか。
-- Idris の依存型で何を静的保証し、何を実行時に残すべきか。
+- Where is the distinction between a simple message and a complex message made?
+- Why are well-formedness and validity separate phases?
+- Why does a selector require a function annotation?
+- Why is pattern selection still non-trivial when a fallback variant is mandatory?
+- Why can a valid message still produce output after a resolution error?
+- How does keeping markup out of raw strings improve safety?
+- Where should the responsibilities of locale data and the message compiler be separated?
+- Which invariants should dependent types enforce, and which facts belong at runtime?
 
-## フェーズ 1: 利用者として読む
+## Phase 1: read as an MF2 user
 
-[01](01-why-mf2.md) から [09](09-markup-bidi.md) までは MF2 の data model と runtime semantics を学びます。各章でサンプルを CLI に渡し、対応する specification anchor と実装へ進んでください。
+Chapters [01](01-why-mf2.md) through [09](09-markup-bidi.md) cover the MF2 data model and runtime semantics. In each chapter, run the examples through the CLI, then follow the links to the matching specification anchor and implementation.
 
-完了条件:
+Completion criteria:
 
-- placeholder、expression、markup の違いを説明できる。
-- `.input`、`.local`、`.match` を自力で書ける。
-- exact key、plural key、`*` の優先順位を予測できる。
-- syntax/data-model/resolution/function error を分類できる。
+- Explain the differences among placeholders, expressions, and markup.
+- Write `.input`, `.local`, and `.match` constructs without copying an example.
+- Predict the priority of exact keys, plural keys, and `*`.
+- Classify syntax, data-model, resolution, and message-function errors.
 
-## フェーズ 2: コンパイラ作者として読む
+## Phase 2: read as a compiler author
 
-[10](10-idris-design.md) から [13](13-runtime.md) は実装編です。`RawVariant` の key が `List Key` なのに、`Variant n` では `Vect n Key` になる理由が中心です。
+Chapters [10](10-idris-design.md) through [13](13-runtime.md) focus on the implementation. The central question is why a `RawVariant` stores its keys as `List Key`, while `Variant n` stores them as `Vect n Key`.
 
-完了条件:
+Completion criteria:
 
-- `parse : String -> Either Diagnostic RawMessage` と `validate : RawMessage -> Validation CompiledMessage` を分ける理由を説明できる。
-- `MatchPlan tail` が selector 0 個を表現できないことを型から読める。
-- `AllCatchall keys` の proof が runtime から erase される意味を説明できる。
-- exact decimal に `Double` を使わない理由を説明できる。
+- Explain why `parse : String -> Either Diagnostic RawMessage` and `validate : RawMessage -> Validation CompiledMessage` are separate.
+- Read from the type that `MatchPlan tail` cannot represent zero selectors.
+- Explain what it means for the `AllCatchall keys` proof to be erased at runtime.
+- Explain why exact decimal behavior must not use `Double`.
 
-## フェーズ 3: 適合性と実運用を判断する
+## Phase 3: judge conformance and production readiness
 
-[14](14-testing.md) から [17](17-draft-49.md) では、公式 fixture、セキュリティ、locale backend、draft drift を扱います。
+Chapters [14](14-testing.md) through [17](17-draft-49.md) cover official fixtures, security, the locale-backend boundary, and draft drift.
 
-完了条件:
+Completion criteria:
 
-- 「公式 fixture が通る」と「全 locale で完全適合」の違いを説明できる。
-- NFC normalization、CLDR plural data、TZDB の責務を配置できる。
-- 48.2 と draft 49 を混ぜずに upgrade plan を作れる。
+- Explain the difference between “passes the official fixtures” and “fully conformant for every locale.”
+- Assign responsibility for NFC normalization, CLDR plural data, and TZDB.
+- Produce an upgrade plan without mixing Version 48.2 and the Version 49 draft.
 
-## 推奨する手の動かし方
+## Recommended practice loop
 
-各章で次を繰り返します。
+Repeat the following in every chapter:
 
 ```console
 $ nix develop
@@ -54,11 +54,10 @@ $ ./build/exec/mf2 check '...'
 $ ./build/exec/mf2 format '...' name=value
 ```
 
-REPL で型を見る場合は `idris2 --repl mf2.ipkg` を使います。API documentation は `make docs` の後に `build/docs/mf2/index.html` へ生成されます。
+To inspect types in the REPL, run `idris2 --repl mf2.ipkg`. After `make docs`, the generated API documentation is available at `build/docs/mf2/index.html`.
 
-## 仕様
+## Specifications
 
 - [LDML 48.2 Part 9](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html)
-- [公式 Quick Start](https://messageformat.unicode.org/docs/quick-start/)
-- [仕様リンク総覧](appendices/spec-index.md)
-
+- [Official Quick Start](https://messageformat.unicode.org/docs/quick-start/)
+- [Complete specification index](appendices/spec-index.md)

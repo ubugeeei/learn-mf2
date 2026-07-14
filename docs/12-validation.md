@@ -1,40 +1,39 @@
-# Semantic validation と type refinement
+# Semantic validation and type refinement
 
-parser が成功しても message は invalid かもしれません。validator は data-model error を列挙し、成功時にだけ dependent IR を構築します。
+A message can be invalid even after parsing succeeds. The validator enumerates data-model errors and constructs dependent IR only on success.
 
-## validation pass
+## Validation passes
 
-1. expression/markup ごとの duplicate option を検出。
-2. declaration の bound/reference history を検査。
-3. direct/indirect function annotation environment を構築。
-4. variant key arity を検査。
-5. all-catchall fallback を探索。
-6. normalized key list の重複を検査。
-7. `List` を exact-size `Vect` に変換。
-8. `AllCatchall` witness を構築。
+1. Detect duplicate options in each expression and markup node.
+2. Check declaration binding and reference history.
+3. Build the direct and indirect function-annotation environment.
+4. Check variant key arity.
+5. Find an all-catch-all fallback.
+6. Detect duplicate normalized key lists.
+7. Convert each `List` to an exact-sized `Vect`.
+8. Construct the `AllCatchall` witness.
 
-## error accumulation
+## Error accumulation
 
-`Validation value = Either (List Diagnostic) value` とし、独立して報告できる error をまとめます。arity が不正なまま dependent conversion を強行せず、error が空の場合のみ `exactVect` を呼ぶ構成です。
+`Validation value = Either (List Diagnostic) value` collects errors that can be reported independently. It does not force a dependent conversion while arity is invalid; `exactVect` is called only when the error list is empty.
 
-## indirect annotation
+## Indirect annotations
 
-function のない local variable でも、operand が annotated declaration を参照すれば selector に使えます。`annotationEnvironment` は declaration order で annotation を伝播します。forward reference は先に duplicate-declaration で拒否されるため循環しません。
+A local variable without its own function may still act as a selector when its operand refers to an annotated declaration. `annotationEnvironment` propagates annotations in declaration order. Forward references are first rejected as duplicate declarations, so this environment cannot contain cycles.
 
-## proof construction
+## Proof construction
 
-`proveAllCatchall` は `Vect n Key` を走査し、すべて Catchall のときだけ `AllCatchall keys` を返します。boolean check と proof construction を同じ traversal に閉じ込めています。
+`proveAllCatchall` traverses `Vect n Key` and returns `AllCatchall keys` only when every key is `Catchall`. The Boolean-style check and proof construction are intentionally combined in one traversal.
 
-## 対応実装
+## Corresponding implementation
 
 - [`validate`](../src/MF2/Validate.idr)
 - [`compileMatch`](../src/MF2/Validate.idr)
 - [`proveAllCatchall`](../src/MF2/Validate.idr)
 - [`CompiledMessage`](../src/MF2/IR.idr)
 
-## 仕様
+## Specifications
 
 - [Well-formed vs valid](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#well-formed-vs-valid-messages)
 - [Data model errors](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#data-model-errors)
 - [Interchange data model](https://www.unicode.org/reports/tr35/tr35-78/tr35-messageFormat.html#interchange-data-model)
-
