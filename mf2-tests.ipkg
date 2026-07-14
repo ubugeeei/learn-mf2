@@ -1,0 +1,11 @@
+package mf2-tests
+
+version = 0.1.0
+sourcedir = "tests"
+modules = OfficialFixtures,
+          OfficialRuntimeFixtures,
+          TypeLevel,
+          TestMain
+main = TestMain
+executable = mf2-tests
+opts = "--total"

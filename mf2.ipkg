@@ -1,0 +1,21 @@
+package mf2
+
+version = 0.1.0
+authors = "learn-mf2 contributors"
+brief = "A type-driven Unicode MessageFormat 2 compiler"
+license = "MIT"
+
+sourcedir = "src"
+modules = MF2.Diagnostic,
+          MF2.Syntax,
+          MF2.Parser,
+          MF2.IR,
+          MF2.Validate,
+          MF2.Decimal,
+          MF2.Runtime,
+          MF2.Compiler
+
+main = Main
+executable = mf2
+opts = "--total"
+
